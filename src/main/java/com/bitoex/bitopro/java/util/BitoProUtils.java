@@ -1,16 +1,16 @@
 package com.bitoex.bitopro.java.util;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 
 public final class BitoProUtils {
-
-  private BitoProUtils() {
-  }
-
+  
   public static CloseableHttpClient createDefaultClient() {
-    return HttpClientBuilder.create().build();
+    return HttpClients.createDefault();
   }
 
   public static String getPair(String base, String quote) {
@@ -23,4 +23,9 @@ public final class BitoProUtils {
     }
   }
 
+  public static URI appendUri(String uri, String appendQuery) throws URISyntaxException {
+        URI oldUri = new URI(uri);
+        return new URI(oldUri.getScheme(), oldUri.getAuthority(), oldUri.getPath(),
+                oldUri.getQuery() == null ? appendQuery : oldUri.getQuery() + "&" + appendQuery, oldUri.getFragment());
+    }
 }

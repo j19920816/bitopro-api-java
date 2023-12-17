@@ -26,6 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.StatusLine;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ import org.slf4j.LoggerFactory;
 abstract class AbstractBitoProClient {
 
     private static final Logger log = LoggerFactory.getLogger(AbstractBitoProClient.class);
-    private static final String URL_BASE = "https://api.bitopro.com/v2/";
+    private static final String URL_BASE = "https://api.bitopro.com/v3/";
 
     protected final CloseableHttpClient client;
     protected final ObjectMapper om;
@@ -55,6 +56,12 @@ abstract class AbstractBitoProClient {
         om.registerModule(module);
 
         this.om = om;
+    }
+
+    protected HttpGet createGet(String url) {
+        HttpGet get = new HttpGet(url);
+        get.addHeader(CLIENT_HEADER);
+        return get;
     }
 
     String getUrl(String path) {

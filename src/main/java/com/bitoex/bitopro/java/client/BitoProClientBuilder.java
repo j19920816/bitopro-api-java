@@ -13,8 +13,6 @@ public final class BitoProClientBuilder {
 
     private CloseableHttpClient client;
 
-    private BitoProClientBuilder() {}
-
     /**
      * Create a BitoProClientBuilder with provided client.
      * @param client {@link CloseableHttpClient} to be used with BitoProClient/BitoProPublicClient
@@ -40,7 +38,7 @@ public final class BitoProClientBuilder {
      * Create BitoProClient with key, secret, email from ENV using "BITO_PRO_KEY", "BITO_PRO_SECRET" and "BITO_PRO_EMAIL" as keys respectively.
      * @return a new BitoProClient
      */
-    public BitoProClient createWithEnv() {
+    public BitoProAuthClient createWithEnv() {
         String key = System.getenv("BITO_PRO_KEY");
         String secret = System.getenv("BITO_PRO_SECRET");
         String email = System.getenv("BITO_PRO_EMAIL");
@@ -52,7 +50,7 @@ public final class BitoProClientBuilder {
      * @param properties a properties with specified key values
      * @return a new BitoProClient
      */
-    public BitoProClient createWithProperties(Properties properties) {
+    public BitoProAuthClient createWithProperties(Properties properties) {
         String key = properties.getProperty("bitopro.key");
         String secret = properties.getProperty("bitopro.secret");
         String email = properties.getProperty("bitopro.email");
@@ -63,7 +61,7 @@ public final class BitoProClientBuilder {
      * Create BitoProClient with key, secret, email from Java system properties using "BITO_PRO_KEY", "BITO_PRO_SECRET" and "BITO_PRO_EMAIL" as keys respectively.
      * @return a new BitoProClient
      */
-    public BitoProClient createWithSystemProperties() {
+    public BitoProAuthClient createWithSystemProperties() {
         String key = System.getProperty("BITO_PRO_KEY");
         String secret = System.getProperty("BITO_PRO_SECRET");
         String email = System.getProperty("BITO_PRO_EMAIL");
@@ -77,7 +75,7 @@ public final class BitoProClientBuilder {
      * @param email BitoPro email (account)
      * @return a new BitoProClient
      */
-    public BitoProClient create(String apiKey, String secret, String email) {
+    public BitoProAuthClient create(String apiKey, String secret, String email) {
         return new DefaultBitoProClient(apiKey, secret, email, client);
     }
 

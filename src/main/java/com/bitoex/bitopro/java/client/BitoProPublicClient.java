@@ -2,11 +2,11 @@ package com.bitoex.bitopro.java.client;
 
 import java.io.IOException;
 import java.util.List;
-
+import java.util.Map;
 import com.bitoex.bitopro.java.model.OrderBook;
+import com.bitoex.bitopro.java.model.Resolution;
 import com.bitoex.bitopro.java.model.Ticker;
 import com.bitoex.bitopro.java.model.Trade;
-
 /**
  * Client for BitoPro Public API. Provides direct methods to access BitoPro
  * Public API. Default implementation can be created via {@link BitoProClientBuilder}.
@@ -19,7 +19,6 @@ import com.bitoex.bitopro.java.model.Trade;
  * ${base}_${quote}}.
  */
 public interface BitoProPublicClient {
-
     /**
      * Get ticker for specific pair.
      * 
@@ -28,14 +27,6 @@ public interface BitoProPublicClient {
      * @throws IOException when connection error occured while called the Rest API
      */
     Ticker getTicker(String pair) throws IOException;
-
-    /**
-     * Get tickers for all pairs.
-     * 
-     * @return ticker for the pair
-     * @throws IOException when connection error occured while called the Rest API
-     */
-    List<Ticker> getTickers() throws IOException;
 
     /**
      * Get order book for specific pair.
@@ -56,61 +47,38 @@ public interface BitoProPublicClient {
     List<Trade> getTrades(String pair) throws IOException;
 
     /**
-     * Create convenient methods for specified pair. Save users from passing the
-     * same pair parameters.
+     * Get recent currencies.
      * 
-     * @param pair the pair to act on
-     * @return a {@code BitoProPublicPairClient} for specified pair
+     * @return the list of currencies
+     * @throws IOException when connection error occured while called the Rest API
      */
-    default BitoProPublicPairClient getPairClient(String pair) {
-        return new BitoProPublicPairClient(this, pair);
-    }
+    Map<String, Object> getCurrencies() throws IOException;
+
+     /**
+     * Get recent limitations and fees
+     * 
+     * @return the limitations and fees
+     * @throws IOException when connection error occured while called the Rest API
+     */
+    
+    Map<String, Object>  getCandlestick(String pair, Resolution resolution, long startDateTimestamp,  long endDateTimestamp) throws IOException;
 
     /**
-     * A pair specific BitoProPublicClient.
+     * Get list of pairs available for trade
+     * 
+     * @return a list of pairs available for trade
+     * @throws IOException when connection error occured while called the Rest API
      */
-    class BitoProPublicPairClient {
+    
+    Map<String, Object>  getTradingPairs() throws IOException;
 
-        private final BitoProPublicClient client;
-        private final String pair;
-
-        BitoProPublicPairClient(BitoProPublicClient client, String pair) {
-            this.client = client;
-            this.pair = pair;
-        }
-
-        /**
-         * Get ticker for specific pair.
-         * 
-         * @return ticker for the pair
-         * @throws IOException when connection error occured while called the Rest API
-         * @see BitoProPublicClient#getTicker(String)
-         */
-        public Ticker getTicker() throws IOException {
-            return client.getTicker(pair);
-        }
-
-        /**
-         * Get orderbook for specific pair.
-         * 
-         * @return order book for the pair
-         * @throws IOException when connection error occured while called the Rest API
-         * @see BitoProPublicClient#getOrderBook(String)
-         */
-        public OrderBook getOrderBook() throws IOException {
-            return client.getOrderBook(pair);
-        }
-
-        /**
-         * Get recent trades for specific pair.
-         * 
-         * @return trades for the pair
-         * @throws IOException when connection error occured while called the Rest API
-         * @see BitoProPublicClient#getTrades(String)
-         */
-        public List<Trade> getTrades() throws IOException {
-            return client.getTrades(pair);
-        }
-    }
+    /**
+     * Get open, high, low, close data in a period
+     * 
+     * @return the open, high, low, close data in a period
+     * @throws IOException when connection error occured while called the Rest API
+     */
+    
+    Map<String, Object>  getLimitationsFees() throws IOException;
 
 }

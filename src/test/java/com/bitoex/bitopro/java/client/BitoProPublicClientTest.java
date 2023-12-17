@@ -1,58 +1,49 @@
 package com.bitoex.bitopro.java.client;
-
-import com.bitoex.bitopro.java.client.BitoProPublicClient.BitoProPublicPairClient;
-import com.bitoex.bitopro.java.model.Trade;
-import com.bitoex.bitopro.java.model.Ticker;
 import com.bitoex.bitopro.java.model.OrderBook;
+import com.bitoex.bitopro.java.model.Resolution;
+import com.bitoex.bitopro.java.model.Ticker;
+import com.bitoex.bitopro.java.model.Trade;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.BeforeClass;
-import org.junit.Test;
+
 
 public class BitoProPublicClientTest {
 
   private static final Logger logger = LogManager.getLogger();
   private static final String pair = "btc_twd";
   private static BitoProPublicClient client;
-  private static BitoProPublicPairClient pairClient;
 
-  @BeforeClass
-  public static void init() {
-    client = BitoProClientBuilder.withDefaultClient().createPublic();
-    pairClient = client.getPairClient(pair);
+  public static void main(String[] args) {
+    try {
+      client = BitoProClientBuilder.withDefaultClient().createPublic();
+      
+      OrderBook ob = client.getOrderBook(pair);
+      logger.info("order book: {}\r\n", ob);
+
+      Ticker ticker = client.getTicker(pair);
+      logger.info("{} ticker: {}\r\n", pair, ticker);
+
+      List<Trade> trades = client.getTrades(pair);
+      logger.info("trades: {}\r\n", trades);
+
+      Map<String, Object> currencyInfo = client.getCurrencies();
+      logger.info("currencyInfo: {}\r\n", currencyInfo);
+
+      Map<String, Object> limitationsFees = client.getLimitationsFees();
+      logger.info("limitations and Fees: {}\r\n", limitationsFees);
+
+      Map<String, Object> candleSticks = client.getCandlestick(pair, Resolution._1d, 1650707415, 1678355415);
+      logger.info("Candle Sticks: {}\r\n", candleSticks);
+
+      Map<String, Object> tradingPairs = client.getTradingPairs();
+      logger.info("Trading pairs: {}\r\n", tradingPairs);
+
+    } catch (Exception e) {
+      System.err.println(e.getMessage());
+    }
   }
-
-  @Test
-  public void testGetTrades() throws IOException {
-
-    List<Trade> trades = pairClient.getTrades();
-    //there are at least 10 currencies
-    logger.info("trades: {}", trades);
-  }
-
-  @Test
-  public void testGetTickers() throws IOException {
-
-    List<Ticker> tickers = client.getTickers();
-    logger.info("tickers: {}", tickers);
-  }
-
-  @Test
-  public void testGetTicker() throws IOException {
-
-    Ticker ticker = pairClient.getTicker();
-    logger.info("ticker: {}", ticker);
-  }
-
-  @Test
-  public void testOrderBook() throws IOException {
-
-    OrderBook ob = pairClient.getOrderBook();
-    logger.info("order book: {}", ob);
-  }
-
 }
